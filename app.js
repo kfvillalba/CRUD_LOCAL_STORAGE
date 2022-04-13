@@ -3,32 +3,38 @@
 const formularioUI = document.getElementById('formulario');
 const listaProductosUI = document.getElementById('listaProductos');
 let arrayProductos = [];
+let arrayCarrito = [];
 
 
 
 
 // Funciones
 
-const CrearItem = (producto) =>{
+const CrearItem = (codProducto,nombreProducto,valorProducto,stockProducto) =>{
 
     let item = {
-        producto: producto,
+        codProducto: codProducto,
+        valorProducto: valorProducto,
+        nombreProducto: nombreProducto,
+        stockProducto : stockProducto,
         estado : false
     }
     arrayProductos.push(item);
     return item;
 }
 
-const GuardarDB = () =>{
-    localStorage.setItem('carrito', JSON.stringify(arrayProductos));
+const GuardarProductosDB = () =>{
+    localStorage.setItem('Productos', JSON.stringify(arrayProductos));
     
-    LeerDB();
+    LeerProductosDB();
 }
 
-const LeerDB = () =>{    
+const LeerProductosDB = () =>{    
     listaProductosUI.innerHTML = '';
+    listaProductosUI.innerHTML += '<h3 class="my-4" id="lista">LISTA DE PRODUCTOS</h3>'; 
+       
 
-    arrayProductos = JSON.parse(localStorage.getItem('carrito'));
+    arrayProductos = JSON.parse(localStorage.getItem('Productos'));
    
     if(arrayProductos == null){
         arrayProductos = [];
@@ -40,30 +46,42 @@ const LeerDB = () =>{
             <i class="material-icons float-start me-3">
                 shopping_bag
             </i>
-            <b>${element.producto}</b> - ${element.estado}  
+            <b>${element.codProducto}</b>  
             <span class="float-end">
                 <i class="material-icons">
-                    done
+                    shopping_cart
                 </i>  
                 <i class="material-icons">
                     delete
                 </i>                   
             </span> 
+            <span class="float-start me-5">
+                ${element.nombreProducto} 
+            </span>  
+
+            <span class="float-end me-5">
+                ${element.stockProducto} 
+            </span>
+
+            <span class="float-end me-5">
+                ${element.valorProducto}  
+            </span> 
+
           </div>`            
         });
     }
 }
 
-const EliminarDB = (producto) =>{
-    let indexArray = arrayProductos.findIndex((elemento)=>elemento.producto === producto)
+const EliminarProductosDB = (codProducto) =>{
+    let indexArray = arrayProductos.findIndex((producto)=>producto.codProducto === codProducto)
     arrayProductos.splice(indexArray,1);
-    GuardarDB();
+    GuardarProductosDB();
 }
-const EditarDB = (producto) => {
-    let indexArray = arrayProductos.findIndex((elemento)=>elemento.producto === producto)
+const EditarProductosDB = (codProducto) => {
+    let indexArray = arrayProductos.findIndex((producto)=>producto.codProducto === codProducto)
     arrayProductos[indexArray].estado = true;
     console.log(indexArray);
-    GuardarDB();
+    GuardarProductosDB();
 }
 
 
@@ -71,25 +89,28 @@ const EditarDB = (producto) => {
 
 formularioUI.addEventListener('submit', (e) => {
     e.preventDefault();
-    let productoUI = document.getElementById('producto').value;
+    let codProductoUI = document.getElementById('codProducto').value;
+    let nombreProductoUI = document.getElementById('nombreProducto').value;
+    let stockProductoUI = document.getElementById('stockProducto').value;
+    let valorProductoUI = document.getElementById('valorProducto').value;
     
-    CrearItem(productoUI);
+    CrearItem(codProductoUI,nombreProductoUI,valorProductoUI,stockProductoUI);
 
     formularioUI.reset();
 
-    GuardarDB();
+    GuardarProductosDB();
 })
 
-document.addEventListener('DOMContentLoaded', LeerDB());
+document.addEventListener('DOMContentLoaded', LeerProductosDB());
 
 listaProductosUI.addEventListener('click', (e) =>{
     e.preventDefault();
     let texto =  e.path[2].childNodes[3].innerHTML;
-     console.log(texto);
-    if (e.target.innerHTML.trim() == 'done') {
-        EditarDB(texto);
+     
+    if (e.target.innerHTML.trim() == 'shopping_cart') {
+        EditarProductosDB(texto);
    }else if( e.target.innerHTML.trim() == 'delete'){       
-       EliminarDB(texto);
+       EliminarProductosDB(texto);
    }
   
 })

@@ -4,6 +4,7 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    
 
     <link href="https://fonts.googleapis.com/css2?family=Material+Icons"
       rel="stylesheet">
@@ -24,12 +25,31 @@
         </h3>
 
         <form  id="formulario">
-            <input type="text" id="producto" class="form-control my-3">
+            <div class="form-floating mb-3">
+              <input type="number" id="codProducto" class="form-control my-3">
+              <label for="codProdcuto">Codigo del Producto</label>   
+            </div> 
+
+            <div class="form-floating mb-3">
+              <input type="text" id="nombreProducto" class="form-control my-3">
+              <label for="nombreProducto">Nombre del Producto</label> 
+            </div>
+
+            <div class="form-floating mb-3">
+              <input type="text" id="stockProducto" class="form-control my-3">
+              <label for="stockProducto">Cantidad del Producto</label>   
+            </div> 
+            
+            <div class="form-floating mb-3">
+              <input type="text" id="valorProducto" class="form-control my-3">
+              <label for="valorProducto">Valor del Producto</label>   
+            </div>                        
+            
             <button type="submit" class="btn btn-success">Guardar</button>
         </form>
 
         <div id="listaProductos" class="mt-3">
-            <h3 class="my-4">LISTA DE PRODUCTOS</h3>
+            <h3 class="my-4" id="lista">LISTA DE PRODUCTOS</h3>
 
             
 

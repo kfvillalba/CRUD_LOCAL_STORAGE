@@ -73,8 +73,7 @@ const LeerProductosDB = () => {
     arrayProductos = [];
   } else {
     if (arrayProductos.length === 0) {
-      listaProductosUI.innerHTML = `<th scope="row" colspan="5">Lista vacia - Agregue Productos!</th>
-            </tr>`;
+      listaProductosUI.innerHTML = `<h4>Lista vacia - Agregue Productos!</h4>`;
       return;
     } else {
       listaProductosUI.innerHTML = "";
@@ -178,7 +177,6 @@ const btnAccion = (e) => {
   let indexArray = arrayCarrito.findIndex(
     (producto) => producto.codProducto === e.target.dataset.id
   );
-  console.log(e.target.dataset.id, indexArray);
 
   if (e.target.classList.contains("btn-info")) {
     arrayCarrito[indexArray].CantidadComprar++;

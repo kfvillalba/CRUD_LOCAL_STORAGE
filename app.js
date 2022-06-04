@@ -13,26 +13,77 @@ const fragment = document.createDocumentFragment();
 
 // Funciones
 
-const CrearItem = (codProducto, nombreProducto, valorProducto) => {
-  let item = {
+const CrearProducto = (codProducto, nombreProducto, valorProducto) => {
+  let producto = {
     codProducto: codProducto,
     valorProducto: valorProducto,
     nombreProducto: nombreProducto,
   };
+ 
+  return producto;
+};
+
+const GuardarProducto = (producto) =>{
+  let mensaje = ValidarFormulario(producto)
+  flag = ValidarProductoExistente(producto.codProducto)
+   
+  if (mensaje === "" && flag == false){
+    arrayProductos.push(producto)
+  }else if(flag = true && mensaje === ""){
+    alert("El producto ya esta registardo")
+  }else{
+    alert (mensaje)
+  }
+  
+}
+
+const EditarProducto = (producto) =>{
+  let mensaje = ValidarFormulario(producto)
+  indexArray = BuscarProducto (producto.codProducto)
+  flag = ValidarProductoExistente(producto.codProducto)
+console.log(mensaje)
+console.log(flag)
+
+  if (mensaje === "" && flag == true){
+    arrayProductos[indexArray].nombreProducto = producto.nombreProducto
+    arrayProductos[indexArray].valorProducto = producto.valorProducto
+  }else if (flag == false && mensaje === ""){
+    alert("El producto no esta registardo")
+  }else{
+    alert (mensaje)
+  }
+  
+}
+const BuscarProducto = (codProducto) =>{
   let indexArray = arrayProductos.findIndex(
     (producto) => producto.codProducto === codProducto
   );
+  return indexArray;
+}
+const BuscarProductoCarrito = (codProducto) =>{
+  let indexArray = arrayCarrito.findIndex(
+    (producto) => producto.codProducto === codProducto
+  );
+  return indexArray;
+}
 
-  if (indexArray === -1) {
-    arrayProductos.push(item);
-  } else if(codProducto != "" && nombreProducto != "" && valorProducto != ""){
-    alert("Completar los campos obligatorios");
-  }else{
-    alert("Ya Existe");
+const ValidarProductoExistente = (codProducto) =>{
+  let flag = false
+  if (BuscarProducto(codProducto) != -1){
+    flag = true
   }
+  
+  return flag
+}
 
-  return item;
-};
+const ValidarFormulario = (producto) =>{
+  let mensaje = "" 
+ 
+  if (producto.codProducto == "" || producto.nombreProducto == "" || producto.valorProducto == ""){
+    mensaje = "No se aceptan campos en blanco"
+  }
+  return mensaje
+}
 
 const GuardarProductosDB = () => {
   localStorage.setItem("Productos", JSON.stringify(arrayProductos));
@@ -48,17 +99,13 @@ const GuardarProductosCarritoDB = () => {
 };
 
 const EliminarProductosDB = (codProducto) => {
-  let indexArray = arrayProductos.findIndex(
-    (producto) => producto.codProducto === codProducto
-  );
+  let indexArray = BuscarProducto (codProducto);
   arrayProductos.splice(indexArray, 1);
   EliminarProductosCarritoDB(codProducto);
   GuardarProductosDB();
 };
 const EliminarProductosCarritoDB = (codProducto) => {
-  let indexArray = arrayCarrito.findIndex(
-    (producto) => producto.codProducto === codProducto
-  );
+  let indexArray = BuscarProductoCarrito(codProducto)
   arrayCarrito.splice(indexArray, 1);
   GuardarProductosCarritoDB();
   pintarCarrito();
@@ -102,9 +149,7 @@ const ComprarProductosDB = (codProducto) => {
     valorProducto: arrayProductos[indexArray].valorProducto,
     CantidadComprar: 1,
   };
-  indexArray = arrayCarrito.findIndex(
-    (producto) => producto.codProducto === codProducto
-  );
+  indexArray = BuscarProductoCarrito(codProducto)
   if (indexArray === -1) {
     arrayCarrito.push(productoCarrito);
   } else {
@@ -176,10 +221,8 @@ const pintarFooter = () => {
   }
 };
 const btnAccion = (e) => {
-  let indexArray = arrayCarrito.findIndex(
-    (producto) => producto.codProducto === e.target.dataset.id
-  );
-
+  let indexArray = BuscarProductoCarrito(e.target.dataset.id) 
+  
   if (e.target.classList.contains("btn-info")) {
     arrayCarrito[indexArray].CantidadComprar++;
   } else if (e.target.classList.contains("btn-danger")) {
@@ -191,31 +234,42 @@ const btnAccion = (e) => {
   GuardarProductosCarritoDB();
 };
 
+const CargarPagina = () =>{
+  LeerProductosDB();
+  pintarCarrito();
+  pintarFooter();
+}
+
+
+
 // EventListener
 
 items.addEventListener("click", (e) => {
   btnAccion(e);
 });
 
-formularioUI.addEventListener("submit", (e) => {
+formularioUI.addEventListener("click", (e) => {
   e.preventDefault();
+  
   let codProductoUI = document.getElementById("codProducto").value;
   let nombreProductoUI = document.getElementById("nombreProducto").value;
   let valorProductoUI = document.getElementById("valorProducto").value;
+  let producto = CrearProducto(codProductoUI,nombreProductoUI,valorProductoUI)
 
-  CrearItem(codProductoUI, nombreProductoUI, valorProductoUI);
-
-  formularioUI.reset();
+  if (e.target.classList.contains("btn-submit")){
+    GuardarProducto(producto);
+    formularioUI.reset();
+  }else if (e.target.classList.contains("btn-editar")){
+    EditarProducto(producto)
+    formularioUI.reset();
+  } 
 
   GuardarProductosDB();
 });
 
-document.addEventListener(
-  "DOMContentLoaded",
-  LeerProductosDB(),
-  pintarCarrito(),
-  pintarFooter()
-);
+document.addEventListener("DOMContentLoaded", CargarPagina());
+
+
 
 listaProductosUI.addEventListener("click", (e) => {
   e.preventDefault();

@@ -18,8 +18,24 @@ body{
     
     
 }
-.btn-success{    
-    width: 100%; 
+.btn-editar{
+    width: 40%; 
+    color: white;
+    background-color: red;  
+    font-weight: 700;
+    letter-spacing: .2rem;  
+    font-size: 1.3rem;    
+    text-transform: uppercase;
+    border: none;
+}
+.btn-editar:hover{
+    background-color: wheat;   
+    cursor: pointer;
+    -webkit-transition: .5s;
+    transition: .5s;
+}
+.btn-submit{    
+    width: 40%; 
     color: white;
     background-color: #252d37;  
     font-weight: 700;
@@ -28,7 +44,7 @@ body{
     text-transform: uppercase;
     border: none;
 }
-.btn-success:hover {
+.btn-submit:hover {
     background-color: wheat;   
     cursor: pointer;
     -webkit-transition: .5s;

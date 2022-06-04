@@ -25,7 +25,9 @@ const CrearItem = (codProducto, nombreProducto, valorProducto) => {
 
   if (indexArray === -1) {
     arrayProductos.push(item);
-  } else {
+  } else if(codProducto != "" && nombreProducto != "" && valorProducto != ""){
+    alert("Completar los campos obligatorios");
+  }else{
     alert("Ya Existe");
   }
 

@@ -40,13 +40,16 @@ const GuardarProducto = (producto) =>{
 const EditarProducto = (producto) =>{
   let mensaje = ValidarFormulario(producto)
   indexArray = BuscarProducto (producto.codProducto)
+  indexArrayCarrito = BuscarProductoCarrito(producto.codProducto)
   flag = ValidarProductoExistente(producto.codProducto)
-console.log(mensaje)
-console.log(flag)
 
   if (mensaje === "" && flag == true){
     arrayProductos[indexArray].nombreProducto = producto.nombreProducto
     arrayProductos[indexArray].valorProducto = producto.valorProducto
+    if (indexArrayCarrito != -1) {
+      arrayCarrito[indexArrayCarrito].nombreProducto = producto.nombreProducto
+      arrayCarrito[indexArrayCarrito].valorProducto = producto.valorProducto    
+    }
   }else if (flag == false && mensaje === ""){
     alert("El producto no esta registardo")
   }else{
@@ -55,15 +58,13 @@ console.log(flag)
   
 }
 const BuscarProducto = (codProducto) =>{
-  let indexArray = arrayProductos.findIndex(
-    (producto) => producto.codProducto === codProducto
+  let indexArray = arrayProductos.findIndex((producto) => producto.codProducto === codProducto
   );
   return indexArray;
 }
+
 const BuscarProductoCarrito = (codProducto) =>{
-  let indexArray = arrayCarrito.findIndex(
-    (producto) => producto.codProducto === codProducto
-  );
+  let indexArray = arrayCarrito.findIndex((producto) => producto.codProducto === codProducto);
   return indexArray;
 }
 
@@ -127,8 +128,7 @@ const LeerProductosDB = () => {
     } else {
       listaProductosUI.innerHTML = "";
       arrayProductos.forEach((producto) => {
-        templateTarjeta.querySelector("h5").textContent =
-          producto.nombreProducto;
+        templateTarjeta.querySelector("h5").textContent = producto.nombreProducto;
         templateTarjeta.querySelector("h6").textContent = producto.codProducto;
         templateTarjeta.querySelector("p").textContent = producto.valorProducto;
 
@@ -265,6 +265,7 @@ formularioUI.addEventListener("click", (e) => {
   } 
 
   GuardarProductosDB();
+  GuardarProductosCarritoDB();
 });
 
 document.addEventListener("DOMContentLoaded", CargarPagina());

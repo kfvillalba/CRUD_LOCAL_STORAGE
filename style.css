@@ -70,14 +70,12 @@ h3{
 }
 
 .form-floating{
-    font-weight: 600;
-      
+    font-weight: 600;      
 }
 .btn-card{
     margin-left: 1rem;
     width: 7rem;   
-    font-weight: 700;  
-    
+    font-weight: 700; 
 }
 h4{
     font-weight: 700;

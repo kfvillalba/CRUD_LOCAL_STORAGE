@@ -128,9 +128,9 @@ const LeerProductosDB = () => {
     } else {
       listaProductosUI.innerHTML = "";
       arrayProductos.forEach((producto) => {
-        templateTarjeta.querySelector("h5").textContent = producto.nombreProducto;
         templateTarjeta.querySelector("h6").textContent = producto.codProducto;
-        templateTarjeta.querySelector("p").textContent = producto.valorProducto;
+        templateTarjeta.querySelector("h5").textContent = producto.nombreProducto;
+        templateTarjeta.querySelector("p").textContent = "$" +producto.valorProducto;
 
         const clone = templateTarjeta.cloneNode(true);
         fragment.appendChild(clone);
@@ -170,8 +170,10 @@ const pintarCarrito = () => {
       templateCarrito.querySelector("th").textContent = producto.codProducto;
       templateCarrito.querySelectorAll("td")[0].textContent =
         producto.nombreProducto;
-      templateCarrito.querySelectorAll("td")[1].textContent =
-        producto.CantidadComprar;
+      templateCarrito.querySelectorAll("td")[1].textContent = "$" +
+        producto.valorProducto;  
+      templateCarrito.querySelectorAll("td")[2].textContent =
+        producto.CantidadComprar;    
       templateCarrito.querySelector(".btn-info").dataset.id =
         producto.codProducto;
       templateCarrito.querySelector(".btn-danger").dataset.id =

@@ -10,16 +10,22 @@ switch ($_SERVER['REQUEST_METHOD']) {
         $productoInventario->guardarProducto();
         break;
 
-    case 'GET':  
-            
+    case 'GET': 
+        if(isset($_GET['codProducto'])){
+            productoInventario::obtenerProducto($_GET['codProducto']);
+        } else{
+            productoInventario::obtenerProductos();
+        }            
         break;
 
     case 'PUT':
-        
+        $_PUT = json_decode(file_get_contents('php://input'),true);
+        $productoInventario = new productoInventario($_PUT["codProducto"],$_PUT["nombreProducto"],$_PUT["valorProducto"]);
+        $productoInventario->editarProducto();
         break;
 
-    case 'DELETE':
-        
+    case 'DELETE':        
+        productoInventario::eliminarProducto($_GET['codProducto']);
         break;   
     
 }

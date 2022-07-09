@@ -1,5 +1,4 @@
 <?php
-
 class productoCarrito{
 
 private $cantidadProducto;
@@ -41,19 +40,75 @@ public function setcantidadProducto($cantidadProducto){
     $this->cantidadProducto = $cantidadProducto;  
 }
 
+public static function obtenerKey($Array,$codProducto){
+    foreach ($Array as $key => $value) {
+        if ($value["codProducto"]==$codProducto) {
+            return $key;
+        }        
+    }
+    return -1;
+}
+
 public function guardarProducto(){
+    $contenidoArchivo=file_get_contents("../DATA/productosCarrito.json");
+    $productosCarrito = json_decode($contenidoArchivo,true);
+    $productosCarrito[] = array(
+        "codProducto"=>$this->codProducto,
+        "nombreProducto"=>$this->nombreProducto,
+        "valorProducto"=>$this->valorProducto,
+        "cantidadProducto"=>1
+    );
+    $archivo = fopen("../DATA/productosCarrito.json","w");
+    fwrite($archivo,json_encode($productosCarrito));
+    fclose($archivo);
+}
+public static function  obtenerProducto($codProducto){
+    $contenidoArchivo=file_get_contents("../DATA/productosCarrito.json");
+    $productosCarrito = json_decode($contenidoArchivo,true);    
+    $key = productoCarrito::obtenerKey($productosCarrito,$codProducto);
+    echo(json_encode($productosCarrito[$key]));
 
 }
-public function obtenerProducto(){
-
+public static function obtenerProductos(){
+    $contenidoArchivo=file_get_contents("../DATA/productosCarrito.json");
+    echo($contenidoArchivo);
 }
-public function obtenerProductos(){
 
-}
 public function editarProducto(){
+    $contenidoArchivo=file_get_contents("../DATA/productosCarrito.json");
+    $productosCarrito = json_decode($contenidoArchivo,true);
+    $key = productoCarrito::obtenerKey($productosCarrito,$this->codProducto);
+    $productoCarrito = array(
+            "codProducto"=>$this->codProducto,
+            "nombreProducto"=>$this->nombreProducto,
+            "valorProducto"=>$this->valorProducto,
+            "cantidadProducto"=>1
+        );
+    $productosCarrito[$key] = $productoCarrito;
+    $archivo = fopen("../DATA/productosCarrito.json","w");
+    fwrite($archivo,json_encode($productosCarrito));
+    fclose($archivo);
+}
+public static function eliminarProducto($codProducto){
+    $contenidoArchivo=file_get_contents("../DATA/productosCarrito.json");
+    $productosCarrito = json_decode($contenidoArchivo,true);
+    $key = productoCarrito::obtenerKey($productosCarrito,$codProducto);
+    array_splice($productosCarrito,$key,1);
+
+    $archivo = fopen("../DATA/productosCarrito.json","w");
+    fwrite($archivo,json_encode($productosCarrito));
+    fclose($archivo);
+    echo("Eliminado");
 
 }
-public function eliminarProducto(){
+
+public static function vaciarCarrito(){
+    $contenidoArchivo=file_get_contents("../DATA/productosCarrito.json");
+    $productosCarrito = json_decode($contenidoArchivo,true);
+    $productosCarrito = [];
+    $archivo = fopen("../DATA/productosCarrito.json","w");
+    fwrite($archivo,json_encode($productosCarrito));
+    fclose($archivo);
 
 }
 

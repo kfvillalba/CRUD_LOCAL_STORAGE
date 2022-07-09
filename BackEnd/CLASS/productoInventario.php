@@ -1,5 +1,4 @@
 <?php
-include_once('item.php');
 
 class productoInventario{
     private $codProducto;
@@ -32,7 +31,16 @@ class productoInventario{
         $this->nombreProducto = $valorProducto;
     }
 
-public function guardarProducto(){
+    public static function obtenerKey($Array,$codProducto){
+        foreach ($Array as $key => $value) {
+            if ($value["codProducto"]==$codProducto) {
+                return $key;
+            }        
+        }
+        return -1;
+    }
+
+    public function guardarProducto(){
     $contenidoArchivo=file_get_contents("../DATA/productosInventario.json");
     $productosInventario = json_decode($contenidoArchivo,true);
     $productosInventario[] = array(
@@ -43,21 +51,48 @@ public function guardarProducto(){
     $archivo = fopen("../DATA/productosInventario.json","w");
     fwrite($archivo,json_encode($productosInventario));
     fclose($archivo);
+    }
 
-}
 
-public function obtenerProducto(){
+    public static function obtenerProducto($codProducto){   
+        $contenidoArchivo=file_get_contents("../DATA/productosInventario.json");
+        $productosInventario = json_decode($contenidoArchivo,true);    
+        $key = productoInventario::obtenerKey($productosInventario,$codProducto);
+        echo(json_encode($productosInventario[$key]));
+    }
 
-}
-public function obtenerProductos(){
+    public static function obtenerProductos(){
+        $contenidoArchivo=file_get_contents("../DATA/productosInventario.json");
+        echo($contenidoArchivo);
+    }
+    public function editarProducto(){
+        $contenidoArchivo=file_get_contents("../DATA/productosInventario.json");
+        $productosInventario = json_decode($contenidoArchivo,true);
+        $key = productoInventario::obtenerKey($productosInventario,$this->codProducto);
+        $productoInventario = array(
+            "codProducto"=>$this->codProducto,
+            "nombreProducto"=>$this->nombreProducto,
+            "valorProducto"=>$this->valorProducto
+        );
+        $productosInventario[$key] = $productoInventario;
+        $archivo = fopen("../DATA/productosInventario.json","w");
+        fwrite($archivo,json_encode($productosInventario));
+        fclose($archivo);
 
-}
-public function editarProducto(){
+    }
 
-}
-public function eliminarProducto(){
+        
+    public static function eliminarProducto($codProducto){
+        $contenidoArchivo=file_get_contents("../DATA/productosInventario.json");
+        $productosInventario = json_decode($contenidoArchivo,true);
+        $key = productoInventario::obtenerKey($productosInventario,$codProducto);
+        array_splice($productosInventario,$key,1);
 
-}
+        $archivo = fopen("../DATA/productosInventario.json","w");
+        fwrite($archivo,json_encode($productosInventario));
+        fclose($archivo);
+        echo("Eliminado");
+    }
 
 }
 

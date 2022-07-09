@@ -1,7 +1,9 @@
 <?php
-header("Content-Type: aplication/json");
+
+header("Content-Type: application/json");
 
 include_once("../CLASS/productoCarrito.php");
+
 
 switch ($_SERVER['REQUEST_METHOD']) {
     case 'POST':

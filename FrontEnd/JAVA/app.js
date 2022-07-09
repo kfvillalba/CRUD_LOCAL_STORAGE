@@ -10,7 +10,8 @@ const templateTarjeta = document.getElementById("template-card").content;
 const items = document.getElementById("items");
 const footer = document.getElementById("footer");
 const fragment = document.createDocumentFragment();
-
+const urlInventario = '../../BackEnd/API/productoInventario.php'
+const urlCarrito = '../../BackEnd/API/productoCarrito.php'
 // Funciones
 
 const CrearProducto = (codProducto, nombreProducto, valorProducto) => {
@@ -28,7 +29,18 @@ const GuardarProducto = (producto) =>{
   flag = ValidarProductoExistente(producto.codProducto)
    
   if (mensaje === "" && flag == false){
-    arrayProductos.push(producto)
+    // arrayProductos.push(producto)
+    axios({
+      method:'POST',
+      headers: { 'content-type': 'application/x-www-form-urlencoded' },
+      url:urlInventario,
+      responseType:'json',
+      data:producto      
+    }).then(res=>{
+      console.log("producto: ",producto)
+    }).catch(error=>{
+      console.error(error)
+    })
   }else if(flag = true && mensaje === ""){
     alert("El producto ya esta registardo")
   }else{
@@ -117,7 +129,19 @@ const LeerProductosDB = () => {
   listaProductosUI.innerHTML = "";
   listaProductosUI.innerHTML +=
     '<h3 class="my-4" id="lista">Lista de Productos</h3>';
-  arrayProductos = JSON.parse(localStorage.getItem("Productos"));
+
+//  arrayProductos = JSON.parse(localStorage.getItem("Productos"));
+  axios({
+    method:'GET',
+    url:urlInventario,
+    responseType:'json'
+  }).then(res=>{
+    // console.log(res);
+    // arrayProductos=res.data;
+    
+  }).catch(error=>{
+    console.error(error);
+  })
 
   if (arrayProductos == null) {
     arrayProductos = [];
